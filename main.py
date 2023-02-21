@@ -46,6 +46,33 @@ class Game:
         # no cell was clicked
         return None
 
+    def left_click(self, click_location):
+
+        # do nothing if the game is over
+        if self.gameover:
+            return
+
+        clicked_cell = self.get_clicked_cell(click_location)
+
+        if clicked_cell is not None:
+
+            # check if this is the first click of the game
+            if self.revealed_count == 0:
+                self.place_mines(clicked_cell)
+                self.update_clues()
+
+            # reveal the cell and increment the revealed_count
+            self.revealed_count += clicked_cell.reveal(self.cells)
+
+            # game is over if the clicked cell has a mine
+            if clicked_cell.has_mine:
+                self.gameover = True
+
+            # check if the game is cleared
+            if self.revealed_count == self.size['rows'] * self.size['cols'] - self.num_mines:
+                self.gameover = True
+                self.display_gameover_menu('Game Cleared')
+
     def place_mines(self, clicked_cell):
 
         # create mines at random locations
