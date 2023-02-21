@@ -67,6 +67,37 @@ class Game:
         background_image = pygame.image.load("background2.png")
         self.window.blit(background_image, (0, 0))
 
+    def create_custom_theme(self):
+        theme = pygame_menu.themes.THEME_DEFAULT.copy()
+        theme.title_font = pygame_menu.font.FONT_NEVIS
+        theme.widget_font = pygame_menu.font.FONT_COMIC_NEUE
+        theme.widget_font_size = 25
+        theme.title_font_color = (80, 80, 90)
+        theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_NONE
+        theme.title_close_button_cursor = pygame_menu.locals.CURSOR_HAND
+        return theme
+
+
+    def display_main_menu(self):
+
+        main_menu_theme = self.create_custom_theme()
+
+        self.main_menu = pygame_menu.Menu('Minesweeper', self.width, self.height, theme=main_menu_theme)
+        self.image_widget = self.main_menu.add.image(
+            image_path="background2.png",
+            padding=(0, 0, 30, 0)
+            # top, right, bottom, left
+            # top, right, bottom, left
+        )
+        self.main_menu.add.text_input('Name: ', default='username', maxchar=20)
+        # Add a sub-menu for 'Play'
+        play_menu = self.add_play_menu()
+        self.main_menu.add.button('Play', play_menu)
+        # Add a sub-menu for 'About'
+        about_menu = self.add_about_menu()
+        self.main_menu.add.button('About', about_menu)
+        self.main_menu.mainloop(self.window, fps_limit=fps)
+
 class Cell(pygame.Rect):
     pass
 
