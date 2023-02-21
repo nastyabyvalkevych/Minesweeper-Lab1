@@ -9,7 +9,7 @@ import math
 pygame.init()
 
 # frames per second
-fps = 120
+fps = 130
 
 # width and height of each cell
 cell_size = 50
