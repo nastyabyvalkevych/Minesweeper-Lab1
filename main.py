@@ -51,7 +51,25 @@ class Game:
                 mine_cell.has_mine = True
                 mine_count += 1
 
+    def update_clues(self):
 
+        # iterate through every cell
+        for (row, col) in self.cells:
+            cell = self.cells[(row, col)]
+
+            # check the surrounding cells
+            for adjacent_row in range(row - 1, row + 2):
+                for adjacent_col in range(col - 1, col + 2):
+
+                    # no need to check same cell
+                    if cell.row == adjacent_row and cell.col == adjacent_col:
+                        continue
+
+                    # check if adjacent location has a mine
+                    if (adjacent_row, adjacent_col) in self.cells:
+                        adjacent_cell = self.cells[(adjacent_row, adjacent_col)]
+                        if adjacent_cell.has_mine:
+                            cell.clue += 1
 
 
 def main():
