@@ -111,6 +111,12 @@ class Game:
                         if adjacent_cell.has_mine:
                             cell.clue += 1
 
+    def reveal_all_cells(self):
+        for (row, col) in self.cells:
+            cell = self.cells[(row, col)]
+            self.revealed_count += cell.reveal(self.cells)
+
+
 class Cell(pygame.Rect):
 
     def reveal(self, cells):
