@@ -163,6 +163,26 @@ class Game:
         )
         return play_menu
 
+
+    def draw_top_panel(self):
+
+        # create the top panel
+        top_panel = Rect(0, 0, self.window.get_width(), top_panel_height)
+        dark_grey = (128, 128, 138)
+        pygame.draw.rect(self.window, dark_grey, top_panel)
+
+        # display the elapsed time
+        time_text = font.render(f'Time: {str(self.time)}', True, (255, 255, 255))
+        time_rect = time_text.get_rect()
+        time_rect.center = (40, top_panel_height // 2)
+        self.window.blit(time_text, time_rect)
+
+        # display the flag count
+        flag_count_text = font.render(f'Flags: {str(self.flag_count)}', True, (255, 255, 255))
+        flag_count_rect = flag_count_text.get_rect()
+        flag_count_rect.center = (self.window.get_width() - 40, top_panel_height // 2)
+        self.window.blit(flag_count_text, flag_count_rect)
+
 class Cell(pygame.Rect):
     pass
 
@@ -181,7 +201,8 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
-
+                
+        game.draw_top_panel()
         pygame.display.update()
 
     pygame.quit()
