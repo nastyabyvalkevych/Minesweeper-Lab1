@@ -33,8 +33,23 @@ ABOUT = ['pygame-minesweeper',
          'Email: .....']
 
 class Game:
-    pass
+    def __init__(self):
+        self.height = None
+        self.width = None
+        self.set_difficulty('beginner')
+        self.setup_window()
 
+    def set_difficulty(self, difficulty):
+
+        if difficulty == 'beginner':
+            self.size = {'rows': 8, 'cols': 8}
+            self.num_mines = 10
+        elif difficulty == 'intermediate':
+            self.size = {'rows': 16, 'cols': 16}
+            self.num_mines = 40
+        elif difficulty == 'expert':
+            self.size = {'rows': 16, 'cols': 30}
+            self.num_mines = 99
 
 class Cell(pygame.Rect):
     pass
