@@ -33,6 +33,19 @@ ABOUT = ['pygame-minesweeper',
 
 class Game:
 
+    def get_clicked_cell(self, click_location):
+
+        # iterate through every cell
+        for (row, col) in self.cells:
+            cell = self.cells[(row, col)]
+
+            # check if that cell was clicked
+            if cell.collidepoint(click_location):
+                return cell
+
+        # no cell was clicked
+        return None
+
     def place_mines(self, clicked_cell):
 
         # create mines at random locations
