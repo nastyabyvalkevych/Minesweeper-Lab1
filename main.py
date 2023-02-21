@@ -192,6 +192,7 @@ class Game:
         # create rows and columns of cells
         for row in range(self.size['rows']):
             for col in range(self.size['cols']):
+
                 cell = Cell(row, col)
 
                 # add to dictionary using (row, col) as the key
@@ -221,95 +222,6 @@ class Game:
         flag_count_rect = flag_count_text.get_rect()
         flag_count_rect.center = (self.window.get_width() - 40, top_panel_height // 2)
         self.window.blit(flag_count_text, flag_count_rect)
-
-class Cell(pygame.Rect):
-    def __init__(self, row, col):
-        self.row = row
-        self.col = col
-
-        self.left = col * cell_size
-        self.top = row * cell_size + top_panel_height
-        self.width = cell_size
-        self.height = cell_size
-
-        # state of the cell (hidden, revealed, or flagged)
-        self.state = 'hidden'
-
-        # is there a mine in this cell
-        self.has_mine = False
-
-        # how many mines surround this cell
-        self.clue = 0
-
-
-    def draw(self, window):
-
-        # make cells have alternating background colors
-        if (self.row + self.col) % 2 == 0:
-            bg_color = (211, 211, 211)
-        else:
-            bg_color = (245, 245, 245)
-        pygame.draw.rect(window, bg_color, self)
-
-        # display the mine or the clue
-        if self.state == 'revealed':
-
-            # display the mine
-            if self.has_mine:
-                pygame.draw.rect(window, 'crimson', self)
-                center_x = self.left + cell_size // 2
-                center_y = self.top + cell_size // 2
-                pygame.draw.circle(window, 'black', (center_x, center_y), cell_size / 4)
-
-            else:
-
-                # make the revealed cells have alternating background colors
-                if (self.row + self.col) % 2 == 0:
-                    pygame.draw.rect(window, 'azure1', self)
-                else:
-                    pygame.draw.rect(window, 'azure3', self)
-
-                # display the clue
-                if self.clue > 0:
-                    text = font.render(str(self.clue), True, clue_colors[self.clue])
-                    text_rect = text.get_rect()
-                    center_x = self.left + cell_size // 2
-                    center_y = self.top + cell_size // 2
-                    text_rect.center = (center_x, center_y)
-                    window.blit(text, text_rect)
-
-        # display the flag
-        if self.state == 'flagged':
-            # draw the triangular flag
-            point1 = (self.left + cell_size // 3, self.top + cell_size // 5)
-            point2 = (self.left + cell_size // 3, self.top + cell_size // 2)
-            point3 = (self.left + cell_size // 3 * 2, self.top + cell_size // 3)
-            pygame.draw.polygon(window, 'red', (point1, point2, point3))
-
-            # draw the pole
-            start = (self.left + cell_size // 3, self.top + cell_size // 5)
-            end = (self.left + cell_size // 3, self.top + cell_size * 4 // 5)
-            pygame.draw.line(window, 'black', start, end)
-
-        # top border
-        start = (self.left, self.top)
-        end = (self.left + cell_size, self.top)
-        pygame.draw.line(window, 'black', start, end)
-
-        # right border
-        start = (self.left + cell_size, self.top)
-        end = (self.left + cell_size, self.top + cell_size)
-        pygame.draw.line(window, 'black', start, end)
-
-        # bottom border
-        start = (self.left + cell_size, self.top + cell_size)
-        end = (self.left, self.top + cell_size)
-        pygame.draw.line(window, 'black', start, end)
-
-        # left border
-        start = (self.left, self.top + cell_size)
-        end = (self.left, self.top)
-        pygame.draw.line(window, 'black', start, end)
 
     def get_clicked_cell(self, click_location):
 
@@ -417,6 +329,93 @@ class Cell(pygame.Rect):
 
 class Cell(pygame.Rect):
 
+    def __init__(self, row, col):
+        self.row = row
+        self.col = col
+
+        self.left = col * cell_size
+        self.top = row * cell_size + top_panel_height
+        self.width = cell_size
+        self.height = cell_size
+
+        # state of the cell (hidden, revealed, or flagged)
+        self.state = 'hidden'
+
+        # is there a mine in this cell
+        self.has_mine = False
+
+        # how many mines surround this cell
+        self.clue = 0
+
+    def draw(self, window):
+
+        # make cells have alternating background colors
+        if (self.row + self.col) % 2 == 0:
+            bg_color = (211, 211, 211)
+        else:
+            bg_color = (245, 245, 245)
+        pygame.draw.rect(window, bg_color, self)
+
+        # display the mine or the clue
+        if self.state == 'revealed':
+
+            # display the mine
+            if self.has_mine:
+                pygame.draw.rect(window, 'crimson', self)
+                center_x = self.left + cell_size // 2
+                center_y = self.top + cell_size // 2
+                pygame.draw.circle(window, 'black', (center_x, center_y), cell_size / 4)
+
+            else:
+
+                # make the revealed cells have alternating background colors
+                if (self.row + self.col) % 2 == 0:
+                    pygame.draw.rect(window, 'azure1', self)
+                else:
+                    pygame.draw.rect(window, 'azure3', self)
+
+                # display the clue
+                if self.clue > 0:
+                    text = font.render(str(self.clue), True, clue_colors[self.clue])
+                    text_rect = text.get_rect()
+                    center_x = self.left + cell_size // 2
+                    center_y = self.top + cell_size // 2
+                    text_rect.center = (center_x, center_y)
+                    window.blit(text, text_rect)
+
+        # display the flag
+        if self.state == 'flagged':
+            # draw the triangular flag
+            point1 = (self.left + cell_size // 3, self.top + cell_size // 5)
+            point2 = (self.left + cell_size // 3, self.top + cell_size // 2)
+            point3 = (self.left + cell_size // 3 * 2, self.top + cell_size // 3)
+            pygame.draw.polygon(window, 'red', (point1, point2, point3))
+
+            # draw the pole
+            start = (self.left + cell_size // 3, self.top + cell_size // 5)
+            end = (self.left + cell_size // 3, self.top + cell_size * 4 // 5)
+            pygame.draw.line(window, 'black', start, end)
+
+        # top border
+        start = (self.left, self.top)
+        end = (self.left + cell_size, self.top)
+        pygame.draw.line(window, 'black', start, end)
+
+        # right border
+        start = (self.left + cell_size, self.top)
+        end = (self.left + cell_size, self.top + cell_size)
+        pygame.draw.line(window, 'black', start, end)
+
+        # bottom border
+        start = (self.left + cell_size, self.top + cell_size)
+        end = (self.left, self.top + cell_size)
+        pygame.draw.line(window, 'black', start, end)
+
+        # left border
+        start = (self.left, self.top + cell_size)
+        end = (self.left, self.top)
+        pygame.draw.line(window, 'black', start, end)
+
     def reveal(self, cells):
 
         # do nothing if cell is already revealed or flagged
@@ -455,6 +454,18 @@ def main():
         for event in pygame.event.get():
             if event.type == QUIT:
                 running = False
+
+
+            # increment the game time
+            if event.type == game.timer_event and not game.gameover:
+                game.time += 1
+
+            # handle mouse clicks
+            if event.type == MOUSEBUTTONDOWN:
+                if event.button == left_mouse_click:
+                    game.left_click(event.pos)
+                elif event.button == right_mouse_click:
+                    game.right_click(event.pos)
 
         game.draw_top_panel()
         game.draw_cells()
