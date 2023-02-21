@@ -33,7 +33,7 @@ clue_colors = ['', 'blue', 'chartreuse4', 'purple', 'red', 'green', 'turquoise',
 
 ABOUT = ['pygame-minesweeper',
          'Authors: Nastya & Danya',
-         'Email: .....']
+         'Email: ....']
 
 class Game:
 
@@ -303,6 +303,53 @@ class Cell(pygame.Rect):
         # no cell was clicked
         return None
 
+    def left_click(self, click_location):
+
+        # do nothing if the game is over
+        if self.gameover:
+            return
+
+        clicked_cell = self.get_clicked_cell(click_location)
+
+        if clicked_cell is not None:
+
+            # check if this is the first click of the game
+            if self.revealed_count == 0:
+                self.place_mines(clicked_cell)
+                self.update_clues()
+
+            # reveal the cell and increment the revealed_count
+            self.revealed_count += clicked_cell.reveal(self.cells)
+
+            # game is over if the clicked cell has a mine
+            if clicked_cell.has_mine:
+                self.gameover = True
+
+            # check if the game is cleared
+            if self.revealed_count == self.size['rows'] * self.size['cols'] - self.num_mines:
+                self.gameover = True
+                self.display_gameover_menu('Game Cleared')
+
+
+    def right_click(self, click_location):
+
+        # do nothing if the game is over
+        if self.gameover:
+            return
+
+        clicked_cell = self.get_clicked_cell(click_location)
+
+        # can only right click if cell has not been revealed yet
+        if clicked_cell is not None and clicked_cell.state != 'revealed':
+
+            # toggle between flagged and hidden states
+            if clicked_cell.state == 'flagged':
+                clicked_cell.state = 'hidden'
+                self.flag_count -= 1
+            else:
+                clicked_cell.state = 'flagged'
+                self.flag_count += 1
+
     def place_mines(self, clicked_cell):
 
         # create mines at random locations
@@ -340,6 +387,37 @@ class Cell(pygame.Rect):
                         adjacent_cell = self.cells[(adjacent_row, adjacent_col)]
                         if adjacent_cell.has_mine:
                             cell.clue += 1
+
+    def reveal_all_cells(self):
+        for (row, col) in self.cells:
+            cell = self.cells[(row, col)]
+            self.revealed_count += cell.reveal(self.cells)
+
+
+class Cell(pygame.Rect):
+
+    def reveal(self, cells):
+
+        # do nothing if cell is already revealed or flagged
+        if self.state == 'revealed' or self.state == 'flagged':
+            return 0
+
+        # change state to revealed
+        self.state = 'revealed'
+        revealed_count = 1
+
+        # if there are no mines surrounding this cell
+        # recursively reveal surrounding cells
+        if self.clue == 0:
+
+            for adjacent_row in range(self.row - 1, self.row + 2):
+                for adjacent_col in range(self.col - 1, self.col + 2):
+
+                    if (adjacent_row, adjacent_col) in cells:
+                        adjacent_cell = cells[(adjacent_row, adjacent_col)]
+                        revealed_count += adjacent_cell.reveal(cells)
+
+        return revealed_count
 
 
 def main():
