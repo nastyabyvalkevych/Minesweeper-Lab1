@@ -98,6 +98,37 @@ class Game:
         self.main_menu.add.button('About', about_menu)
         self.main_menu.mainloop(self.window, fps_limit=fps)
 
+    def add_about_menu(self):
+
+        main_menu_theme = self.create_custom_theme()
+
+        about_menu = pygame_menu.Menu('About', self.width, self.height, theme=main_menu_theme)
+
+        for m in ABOUT:
+            about_menu.add.label(m, align=pygame_menu.locals.ALIGN_LEFT, font_size=25)
+        about_menu.add.vertical_margin(40)
+        rate = "How would you rate our game?"
+        about_menu.add.label(rate, margin=(0, 30))
+        about_menu.add.range_slider('', (7, 10), (1, 10), 1, rangeslider_id='range_slider_double')
+
+        return about_menu
+
+
+    def add_play_menu(self):
+
+        theme = self.create_custom_theme()
+
+        play_menu = pygame_menu.Menu('Levels', self.width, self.height, theme=theme)
+        play_menu.add.button('Beginner', lambda s=self: s.new_game('beginner'))
+        play_menu.add.button('Intermediate', lambda s=self: s.new_game('intermediate'))
+        play_menu.add.button('Expert', lambda s=self: s.new_game('expert'))
+        self.image_widget = play_menu.add.image(
+            image_path="background.png",
+            padding=(0, 0, 0, 0)
+            # top, right, bottom, left
+        )
+        return play_menu
+    
 class Cell(pygame.Rect):
     pass
 
