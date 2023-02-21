@@ -72,6 +72,26 @@ class Game:
             if self.revealed_count == self.size['rows'] * self.size['cols'] - self.num_mines:
                 self.gameover = True
                 self.display_gameover_menu('Game Cleared')
+                
+
+    def right_click(self, click_location):
+
+        # do nothing if the game is over
+        if self.gameover:
+            return
+
+        clicked_cell = self.get_clicked_cell(click_location)
+
+        # can only right click if cell has not been revealed yet
+        if clicked_cell is not None and clicked_cell.state != 'revealed':
+
+            # toggle between flagged and hidden states
+            if clicked_cell.state == 'flagged':
+                clicked_cell.state = 'hidden'
+                self.flag_count -= 1
+            else:
+                clicked_cell.state = 'flagged'
+                self.flag_count += 1
 
     def place_mines(self, clicked_cell):
 
