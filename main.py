@@ -39,6 +39,13 @@ class Game:
         self.set_difficulty('beginner')
         self.setup_window()
 
+        # declare the menus and display the new game menu
+        self.main_menu = None
+        self.about_menu = None
+        self.play_menu = None
+        self.gameover_menu = None
+        self.display_main_menu()
+
     def set_difficulty(self, difficulty):
 
         if difficulty == 'beginner':
@@ -50,6 +57,15 @@ class Game:
         elif difficulty == 'expert':
             self.size = {'rows': 16, 'cols': 30}
             self.num_mines = 99
+
+    def setup_window(self):
+        self.width = cell_size * self.size['cols']
+        self.height = cell_size * self.size['rows'] + top_panel_height
+        self.window = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption('Minesweeper')
+        # useless code
+        background_image = pygame.image.load("background2.png")
+        self.window.blit(background_image, (0, 0))
 
 class Cell(pygame.Rect):
     pass
