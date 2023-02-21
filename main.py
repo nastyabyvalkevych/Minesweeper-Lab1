@@ -8,10 +8,6 @@ import math
 pygame.init()
 
 # frames per second
-fps = 130
-pygame.init()
-
-# frames per second
 fps = 120
 
 # width and height of each cell
@@ -166,6 +162,31 @@ class Game:
             # top, right, bottom, left
         )
         return play_menu
+
+    def display_gameover_menu(self, heading):
+
+        theme = self.create_custom_theme()
+
+        self.gameover_menu = pygame_menu.Menu(heading, self.width, self.height, theme=theme)
+
+        if heading == 'Game Over':
+            self.gameover_menu.add.label('You clicked on a mine!')
+            self.image_widget = self.gameover_menu.add.image(
+                image_path="background4.png",
+                padding=(20, 0, 0, 0)
+                # top, right, bottom, left
+            )
+        elif heading == 'Game Cleared':
+            self.gameover_menu.add.label(f'You win! Clear Time: {self.time} seconds')
+            self.image_widget = self.gameover_menu.add.image(
+                image_path="background3.png",
+                padding=(20, 0, 0, 0)
+                # top, right, bottom, left
+            )
+
+        self.gameover_menu.add.vertical_margin(30)
+        self.gameover_menu.add.button('Play Again', lambda s=self: s.display_main_menu())
+        self.gameover_menu.mainloop(self.window, fps_limit=fps)
 
     def create_cells(self):
         # create rows and columns of cells
@@ -439,6 +460,16 @@ def main():
         game.draw_cells()
         pygame.display.update()
 
+        # check if the game is over
+        if game.gameover:
+            game.reveal_all_cells()
+            game.draw_cells()
+            pygame.display.update()
+
+            # wait 3 seconds
+            pygame.time.wait(2000)
+            game.display_gameover_menu('Game Over')
+            
     pygame.quit()
 
 
