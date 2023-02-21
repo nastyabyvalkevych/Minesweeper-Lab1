@@ -111,6 +111,11 @@ class Game:
                         if adjacent_cell.has_mine:
                             cell.clue += 1
 
+class Cell(pygame.Rect):
+
+
+
+
 
 def main():
     # create the game
