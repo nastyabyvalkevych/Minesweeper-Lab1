@@ -163,6 +163,20 @@ class Game:
         )
         return play_menu
 
+    def create_cells(self):
+        # create rows and columns of cells
+        for row in range(self.size['rows']):
+            for col in range(self.size['cols']):
+                cell = Cell(row, col)
+
+                # add to dictionary using (row, col) as the key
+                self.cells[(row, col)] = cell
+
+    def draw_cells(self):
+        for (row, col) in self.cells:
+            cell = self.cells[(row, col)]
+            cell.draw(self.window)
+
 
     def draw_top_panel(self):
 
@@ -202,7 +216,7 @@ class Cell(pygame.Rect):
         # how many mines surround this cell
         self.clue = 0
 
-    
+
     def draw(self, window):
 
         # make cells have alternating background colors
@@ -289,6 +303,7 @@ def main():
                 running = False
 
         game.draw_top_panel()
+        game.draw_cells()
         pygame.display.update()
 
     pygame.quit()
