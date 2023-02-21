@@ -113,8 +113,28 @@ class Game:
 
 class Cell(pygame.Rect):
 
+    def reveal(self, cells):
 
+        # do nothing if cell is already revealed or flagged
+        if self.state == 'revealed' or self.state == 'flagged':
+            return 0
 
+        # change state to revealed
+        self.state = 'revealed'
+        revealed_count = 1
+
+        # if there are no mines surrounding this cell
+        # recursively reveal surrounding cells
+        if self.clue == 0:
+
+            for adjacent_row in range(self.row - 1, self.row + 2):
+                for adjacent_col in range(self.col - 1, self.col + 2):
+
+                    if (adjacent_row, adjacent_col) in cells:
+                        adjacent_cell = cells[(adjacent_row, adjacent_col)]
+                        revealed_count += adjacent_cell.reveal(cells)
+
+        return revealed_count
 
 
 def main():
