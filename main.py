@@ -29,7 +29,7 @@ clue_colors = ['', 'blue', 'chartreuse4', 'purple', 'red', 'green', 'turquoise',
 
 ABOUT = ['pygame-minesweeper',
          'Authors: Nastya & Danya',
-         'Email: .....']
+         'Email: ....']
 
 class Game:
 
@@ -72,7 +72,7 @@ class Game:
             if self.revealed_count == self.size['rows'] * self.size['cols'] - self.num_mines:
                 self.gameover = True
                 self.display_gameover_menu('Game Cleared')
-                
+
 
     def right_click(self, click_location):
 
