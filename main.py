@@ -67,6 +67,40 @@ class Game:
         background_image = pygame.image.load("background2.png")
         self.window.blit(background_image, (0, 0))
 
+    def new_game(self, difficulty):
+
+        self.gameover = False
+
+        # set the difficulty and reset the window
+        self.set_difficulty(difficulty)
+        self.setup_window()
+
+        # keep track of cells using a dictionary
+        self.cells = dict()
+        self.create_cells()
+
+        # keep track of how many cells have been revealed
+        self.revealed_count = 0
+
+        # keep track of how many flags have been used
+        self.flag_count = 0
+
+        # game timer
+        self.time = 0
+
+        # create a user event for updating time value
+        self.timer_event = pygame.USEREVENT + 1
+
+        # call this event every 1 second
+        pygame.time.set_timer(self.timer_event, 1000)
+
+        # hide the new game menu
+        self.main_menu.disable()
+
+        # hide the game over menu
+        if self.gameover_menu is not None:
+            self.gameover_menu.disable()
+
     def create_custom_theme(self):
         theme = pygame_menu.themes.THEME_DEFAULT.copy()
         theme.title_font = pygame_menu.font.FONT_NEVIS
@@ -128,7 +162,7 @@ class Game:
             # top, right, bottom, left
         )
         return play_menu
-    
+
 class Cell(pygame.Rect):
     pass
 
