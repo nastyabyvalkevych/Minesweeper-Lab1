@@ -5,11 +5,14 @@ from pygame_menu import themes
 import random
 import math
 
-
 pygame.init()
 
 # frames per second
 fps = 130
+pygame.init()
+
+# frames per second
+fps = 120
 
 # width and height of each cell
 cell_size = 50
@@ -33,6 +36,7 @@ ABOUT = ['pygame-minesweeper',
          'Email: .....']
 
 class Game:
+
     def __init__(self):
         self.height = None
         self.width = None
@@ -285,6 +289,57 @@ class Cell(pygame.Rect):
         start = (self.left, self.top + cell_size)
         end = (self.left, self.top)
         pygame.draw.line(window, 'black', start, end)
+
+    def get_clicked_cell(self, click_location):
+
+        # iterate through every cell
+        for (row, col) in self.cells:
+            cell = self.cells[(row, col)]
+
+            # check if that cell was clicked
+            if cell.collidepoint(click_location):
+                return cell
+
+        # no cell was clicked
+        return None
+
+    def place_mines(self, clicked_cell):
+
+        # create mines at random locations
+        mine_count = 0
+        while mine_count < self.num_mines:
+            row = random.randint(0, self.size['rows'] - 1)
+            col = random.randint(0, self.size['cols'] - 1)
+            mine_cell = self.cells[(row, col)]
+
+            # calculate distance between mine and the clicked cell
+            distance = math.sqrt((row - clicked_cell.row) ** 2 + (col - clicked_cell.col) ** 2)
+
+            # place mine only if it's more than two cells away from the clicked cell
+            # and the location doesn't already have a mine
+            if distance > 2 and mine_cell.has_mine == False:
+                mine_cell.has_mine = True
+                mine_count += 1
+
+    def update_clues(self):
+
+        # iterate through every cell
+        for (row, col) in self.cells:
+            cell = self.cells[(row, col)]
+
+            # check the surrounding cells
+            for adjacent_row in range(row - 1, row + 2):
+                for adjacent_col in range(col - 1, col + 2):
+
+                    # no need to check same cell
+                    if cell.row == adjacent_row and cell.col == adjacent_col:
+                        continue
+
+                    # check if adjacent location has a mine
+                    if (adjacent_row, adjacent_col) in self.cells:
+                        adjacent_cell = self.cells[(adjacent_row, adjacent_col)]
+                        if adjacent_cell.has_mine:
+                            cell.clue += 1
 
 
 def main():
