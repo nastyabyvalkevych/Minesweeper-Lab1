@@ -329,7 +329,7 @@ class Game:
 
 class Cell(pygame.Rect):
 
-    def __init__(self, row, col):
+    def __init__(self, row, col, has_mine=False):
         self.row = row
         self.col = col
 
